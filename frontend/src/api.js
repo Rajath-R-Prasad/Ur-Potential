@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+export const BASE_URL = import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : '/api');
 
 export const request = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
