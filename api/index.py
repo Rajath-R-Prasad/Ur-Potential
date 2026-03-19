@@ -111,6 +111,7 @@ def log_session(session: SessionCreate, db: Session = Depends(get_db), current_u
 @app.get("/api/stats")
 def get_stats(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     from datetime import datetime, date
+    from sqlalchemy import func
     
     # Get total completed tasks today
     today = date.today()
@@ -118,7 +119,7 @@ def get_stats(db: Session = Depends(get_db), current_user: User = Depends(get_cu
         Task.user_id == current_user.id,
         Task.is_completed == True,
     ).filter(
-        db.func.date(Task.created_at) == today
+        func.date(Task.created_at) == today
     ).count() # simplistic, might need dialect-specific date extraction for robust production
     # Let's count all completed to be safe for sqlite portability
     all_completed = db.query(Task).filter(Task.user_id == current_user.id, Task.is_completed == True).count()
