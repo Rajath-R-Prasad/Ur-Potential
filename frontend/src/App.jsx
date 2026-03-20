@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Focus from './pages/Focus';
+import Landing from './pages/Landing';
 
 function PrivateRoute({ children }) {
   const { token } = useAuth();
@@ -12,21 +13,24 @@ function PrivateRoute({ children }) {
 
 function PublicRoute({ children }) {
   const { token } = useAuth();
-  return !token ? children : <Navigate to="/" />;
+  return !token ? children : <Navigate to="/dashboard" />;
 }
 
 function AppContent() {
   return (
     <Router>
-      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-purple-500/30">
+      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-purple-500/30 relative overflow-hidden">
         <Routes>
+          <Route path="/" element={
+            <PublicRoute><Landing /></PublicRoute>
+          } />
           <Route path="/login" element={
             <PublicRoute><Login /></PublicRoute>
           } />
           <Route path="/signup" element={
             <PublicRoute><Signup /></PublicRoute>
           } />
-          <Route path="/" element={
+          <Route path="/dashboard" element={
             <PrivateRoute><Home /></PrivateRoute>
           } />
           <Route path="/focus/:id" element={

@@ -9,19 +9,11 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (token) {
-      localStorage.setItem('token', token);
-    } else {
-      localStorage.removeItem('token');
-    }
-  }, [token]);
-
   const login = async (email, password) => {
     setLoading(true);
     try {
       const data = await api.login(email, password);
-      // login endpoint returns {"access_token": ..., "token_type": "bearer"}
+      localStorage.setItem('token', data.access_token);
       setToken(data.access_token);
       return { success: true };
     } catch (e) {
@@ -44,6 +36,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    localStorage.removeItem('token');
     setToken(null);
   };
 

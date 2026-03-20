@@ -15,7 +15,7 @@ export default function Signup() {
     setError('');
     const res = await signup(email, password);
     if (res.success) {
-      navigate('/');
+      navigate('/dashboard');
     } else {
       setError(res.error);
     }
