@@ -17,7 +17,7 @@ app = FastAPI(title="UrPotential API", version="1.0.0")
 # Setup CORS
 origins = [
     "http://localhost:5173", # Vite local frontend
-    "https://urpotential.vercel.app", 
+    "https://ur-potential.vercel.app", 
     "*" # Can be restricted for production, allowing all for now to avoid issues
 ]
 
