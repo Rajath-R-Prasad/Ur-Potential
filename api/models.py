@@ -24,7 +24,7 @@ class Task(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     owner = relationship("User", back_populates="tasks")
-    sessions = relationship("Session", back_populates="task")
+    sessions = relationship("Session", back_populates="task", cascade="all, delete-orphan")
 
 class Session(Base):
     __tablename__ = "sessions"
