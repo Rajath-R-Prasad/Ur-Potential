@@ -10,7 +10,12 @@ from api.schemas import UserCreate, UserResponse, TaskCreate, TaskResponse, Task
 from api.auth import get_password_hash, verify_password, create_access_token, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
 
 # Create DB tables
-Base.metadata.create_all(bind=engine)
+db_startup_error = None
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    import traceback
+    db_startup_error = str(e) + "\n" + traceback.format_exc()
 
 app = FastAPI(title="UrPotential API", version="1.0.0")
 
@@ -31,6 +36,8 @@ app.add_middleware(
 
 @app.get("/api/health")
 def health_check():
+    if db_startup_error:
+        return {"status": "error", "message": "Database failed to connect", "details": db_startup_error}
     return {"status": "ok"}
 
 @app.post("/api/signup", response_model=UserResponse)
