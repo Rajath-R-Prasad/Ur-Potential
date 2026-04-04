@@ -16,6 +16,19 @@ if DATABASE_URL:
     # SQLAlchemy requires postgresql:// instead of postgres:// in connection strings
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+        
+    # Handle passwords that contain special characters (like '@') without URL encoding
+    try:
+        from urllib.parse import quote_plus, unquote_plus
+        if "://" in DATABASE_URL and DATABASE_URL.count('@') > 1:
+            scheme, rest = DATABASE_URL.split("://", 1)
+            creds, host_info = rest.rsplit('@', 1)
+            if ':' in creds:
+                user, password = creds.split(':', 1)
+                encoded_password = quote_plus(unquote_plus(password))
+                DATABASE_URL = f"{scheme}://{user}:{encoded_password}@{host_info}"
+    except Exception:
+        pass
     
     engine = create_engine(DATABASE_URL)
 else:
